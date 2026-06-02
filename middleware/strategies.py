@@ -4,6 +4,10 @@ import os
 from abc import ABC, abstractmethod
 from typing import Dict, Any
 
+# Çıktı klasörünü belirliyoruz
+OUTPUT_DIR = "output_logs"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 class LogStrategy(ABC):
     @abstractmethod
     def write_log(self, log_data: Dict[str, Any]) -> None:
@@ -11,7 +15,7 @@ class LogStrategy(ABC):
 
 class HTMLStrategy(LogStrategy):
     def write_log(self, log_data: Dict[str, Any]) -> None:
-        file_path = "sysadmin_logs.html"
+        file_path = os.path.join(OUTPUT_DIR, "sysadmin_logs.html")
         try:
             file_exists = os.path.exists(file_path)
             
@@ -33,7 +37,7 @@ class HTMLStrategy(LogStrategy):
 
 class CSVStrategy(LogStrategy):
     def write_log(self, log_data: Dict[str, Any]) -> None:
-        file_path = "cybersec_logs.csv"
+        file_path = os.path.join(OUTPUT_DIR, "cybersec_logs.csv")
         try:
             file_exists = os.path.exists(file_path)
             
@@ -51,7 +55,7 @@ class CSVStrategy(LogStrategy):
 
 class JSONStrategy(LogStrategy):
     def write_log(self, log_data: Dict[str, Any]) -> None:
-        file_path = "webdev_logs.json"
+        file_path = os.path.join(OUTPUT_DIR, "webdev_logs.json")
         try:
             with open(file_path, "a", encoding="utf-8") as f:
                 json.dump(log_data, f, ensure_ascii=False)

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  middleware:
+    build:
+      context: ./middleware
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./output_logs:/app/output_logs
+    restart: on-failure
+    networks:
+      - app_network
+
+  producer:
+    build:
+      context: ./producer
+    environment:
+      - MIDDLEWARE_URL=http://middleware:5000/api/logs
+      - STRESS_MODE=False
+      - LOG_COUNT=1000
+    depends_on:
+      - middleware
+    restart: on-failure
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
