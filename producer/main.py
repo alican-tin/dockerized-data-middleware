@@ -23,12 +23,19 @@ def main():
     print("Loglar üretiliyor... Çıkış için CTRL+C")
     
     sent_count = 0
+    start_time = time.time()  # Ölçüm başlangıcı
     
     with requests.Session() as session:
         while True:
             # Stres modunda belirli bir log sayısına ulaşıldıysa durdur
             if STRESS_MODE and LOG_COUNT > 0 and sent_count >= LOG_COUNT:
-                print(f"\n[BİLGİ] Hedeflenen {LOG_COUNT} adet log gönderimi tamamlandı. Program sonlandırılıyor.")
+                end_time = time.time()
+                elapsed = end_time - start_time
+                rps = LOG_COUNT / elapsed if elapsed > 0 else 0
+                
+                print(f"\n[BİLGİ] Hedeflenen {LOG_COUNT} adet log gönderimi tamamlandı.")
+                print(f"[PERFORMANS] Toplam Süre: {elapsed:.2f} saniye")
+                print(f"[PERFORMANS] İşlem Hızı (Throughput): {rps:.2f} log/saniye")
                 break
 
             log_type = random.choice(LOG_TYPES)
